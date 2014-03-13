@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="platformer" tilewidth="32" tileheight="32" spacing="2" margin="1">
+  <image source="../../../../../../../Dropbox/Game Development/platformer_tileset.png" width="640" height="202"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DwAU0g1gJiDTL1odNsQMwOxKwkmseGA7NDaVLNswRiKyC2BmIbHHwLNIwPeAOxDxD7ArEfDr4XGh4Fo4BaAAApzQiB
+  </data>
+ </layer>
+</map>
