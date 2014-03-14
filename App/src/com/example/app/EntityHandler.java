@@ -21,6 +21,8 @@ public class EntityHandler {
 		if(pType.equals(EntityHandler.TYPE_WALL)){
 			EntityHandler.addWall(pParent, scene, pX, pY, pWidth, pHeight, propertiesMap, vertexBufferObjectManager);
 	    } 
+		
+		
 	  }
 
 	  private static void addWall(Activity pParent, Scene pScene, int pX, int pY, int pWidth, int pHeight, HashMap<String,String> propertiesMap, VertexBufferObjectManager vertexBufferObjectManager){

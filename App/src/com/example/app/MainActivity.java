@@ -8,7 +8,10 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.scene.background.Background;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.util.FPSLogger;
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.extension.tmx.TMXLoader;
 import org.andengine.extension.tmx.TMXObject;
@@ -23,6 +26,7 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 import org.andengine.util.debug.Debug;
@@ -30,13 +34,17 @@ import org.andengine.util.debug.Debug;
 
 public class MainActivity extends SimpleBaseGameActivity {
 
-	private static final int CAMERA_WIDTH = 480;
-	private static final int CAMERA_HEIGHT = 320;
+	private static final int CAMERA_WIDTH  =  480;
+	private static final int CAMERA_HEIGHT  =  320;
 	
 	private GameManager gameManager;
 	private BoundCamera mBoundCamera;
-	private BitmapTextureAtlas playerTextureAtlas;
-	private ITextureRegion playerTextureRegion;
+	
+	private BitmapTextureAtlas mBitmapTextureAtlas;
+	private BitmapTextureAtlas backgroundBitmapTextureAtlas;
+	//private TiledTextureRegion playerTextureRegion;
+	private TextureRegion playerTextureRegion;
+	
 	private TMXTiledMap mTMXTiledMap;
 	
 	
@@ -52,29 +60,25 @@ public class MainActivity extends SimpleBaseGameActivity {
 		//page 28
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
 		
-		playerTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 72, 128, TextureOptions.DEFAULT);
-		playerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, this, "Boost.png", 0, 0, 3, 4);
-		playerTextureAtlas.load();
+		
+		mBitmapTextureAtlas = new BitmapTextureAtlas(getTextureManager(),  512, 1024,  TextureOptions.DEFAULT);
+		this.playerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, this, "Boost.png", 100, 100);
+		mBitmapTextureAtlas.load();
 		
 	}
 
 	@Override
 	protected Scene onCreateScene() {
+		this.mEngine.registerUpdateHandler(new FPSLogger());
 		final Scene scene = new Scene();
 		
 		//Create tmxLoader with internal listener that can listen for properties of tiles (such as collisions, item pickups etc.)
 		try{
-			final TMXLoader tmxLoader = new TMXLoader(this.getAssets(), this.mEngine.getTextureManager(), TextureOptions.BILINEAR_PREMULTIPLYALPHA, this.getVertexBufferObjectManager(), 
-					new ITMXTilePropertiesListener() {
-						@Override
-						public void onTMXTileWithPropertiesCreated(final TMXTiledMap pTMXTiledMap, final TMXLayer pTMXLayer, final TMXTile pTMXTile, final TMXProperties<TMXTileProperty> pTMXTileProperties) {
-							
-							
-						}
-					});
+			
+			final TMXLoader tmxLoader = new TMXLoader(this.getAssets(), this.mEngine.getTextureManager(), TextureOptions.BILINEAR_PREMULTIPLYALPHA, this.getVertexBufferObjectManager());
 				
 			//Get instance of the map	
-			this.mTMXTiledMap = tmxLoader.loadFromAsset("tmx/level1.tmx");
+			this.mTMXTiledMap = tmxLoader.loadFromAsset("level1.tmx");
 			
 			
 			
@@ -102,7 +106,7 @@ public class MainActivity extends SimpleBaseGameActivity {
 				for(int i=0; i<size; i++){
 					propertiesMap.put(object.getTMXObjectProperties().get(i).getName(), object.getTMXObjectProperties().get(i).getValue());
 				}
-				
+				//Use a "type" that corresponds to a TMX object property type
 				if(propertiesMap.containsKey("type")){
 					type = propertiesMap.get("type");
 				}
@@ -110,7 +114,21 @@ public class MainActivity extends SimpleBaseGameActivity {
 			}
 		}
 		
-		return null;
+		/* Make the camera not exceed the bounds of the TMXEntity. */
+		this.mBoundCamera.setBounds(0, 0, mTMXTiledMap.getTMXLayers().get(0).getHeight(),mTMXTiledMap.getTMXLayers().get(0).getWidth());
+		this.mBoundCamera.setBoundsEnabled(true);
+		
+		/* Calculate the coordinates for the face, so its centered on the camera. */
+		final float playerCenterX = (CAMERA_WIDTH - this.playerTextureRegion.getWidth()) / 2;
+		final float playerCenterY = (CAMERA_HEIGHT - this.playerTextureRegion.getHeight()) / 2;
+		
+		/* Create the sprite and add it to the scene. */
+		//final AnimatedSprite player = new AnimatedSprite(centerX, centerY, this.playerTextureRegion, this.getVertexBufferObjectManager());
+		//this.mBoundCamera.setChaseEntity(player);
+		//scene.setBackground(new Background(1,1,1));
+		//scene.attachChild(player);
+		
+		return scene;
 	}
 
 

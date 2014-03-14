@@ -4,8 +4,8 @@
   <image source="../../../../../../../Dropbox/Game Development/platformer_tileset.png" width="640" height="202"/>
  </tileset>
  <layer name="Tile Layer 1" width="20" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2DwAU0g1gJiDTL1odNsQMwOxKwkmseGA7NDaVLNswRiKyC2BmIbHHwLNIwPeAOxDxD7ArEfDr4XGh4Fo4BaAAApzQiB
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjYPABTSDWAmINMvWh02xAzA7ErCSax4YDs0NpUs2zBGIrILYGYhscfAs0jA94A7EPEPsCsR8OvhcaHgWjgFoAAC+tqf1ABgAA
   </data>
  </layer>
 </map>
